@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sémiologie Chirurgicale - Dr Lubin</title>
+    <style>
+        :root {
+            --primary-blue: #1e3a8a; /* Bleu profond universitaire */
+            --light-blue: #eff6ff;
+            --accent-blue: #3b82f6;
+            --alert-red: #dc2626; /* Alertes et points critiques */
+            --light-red: #fef2f2;
+            --highlight-yellow: #fef08a; /* Mise en évidence */
+            --bg-color: #f8fafc;
+            --text-main: #334155;
+            --text-muted: #64748b;
+            --white: #ffffff;
+            --border-color: #e2e8f0;
+            --success-green: #16a34a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); line-height: 1.6; display: flex; height: 100vh; overflow: hidden; }
+
+        /* Navigation Sidebar */
+        nav { width: 280px; background: var(--primary-blue); color: var(--white); display: flex; flex-direction: column; overflow-y: auto; flex-shrink: 0; transition: transform 0.3s ease; }
+        .nav-header { padding: 2rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .nav-header h1 { font-size: 1.2rem; font-weight: 700; line-height: 1.3; }
+        .nav-header p { font-size: 0.85rem; color: #93c5fd; margin-top: 0.5rem; }
+        .nav-menu { padding: 1rem 0; flex-grow: 1; }
+        .nav-item { padding: 0.75rem 1.5rem; display: block; color: #bfdbfe; text-decoration: none; cursor: pointer; transition: all 0.2s; border-left: 4px solid transparent; font-size: 0.95rem; }
+        .nav-item:hover { background: rgba(255,255,255,0.05); color: var(--white); }
+        .nav-item.active { background: rgba(255,255,255,0.1); border-left-color: var(--accent-blue); color: var(--white); font-weight: 600; }
+        .nav-section { margin-top: 1.5rem; padding-left: 1.5rem; font-size: 0.75rem; text-transform: uppercase; color: #60a5fa; letter-spacing: 0.05em; margin-bottom: 0.5rem; font-weight: 700; }
+        .progress-container { padding: 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.2); }
+        .progress-bar { height: 6px; background: rgba(255,255,255,0.2); border-radius: 3px; margin-top: 0.5rem; overflow: hidden; }
+        .progress-fill { height: 100%; background: var(--success-green); width: 0%; transition: width 0.5s; }
+
+        /* Main Content */
+        main { flex-grow: 1; overflow-y: auto; padding: 2rem 4rem; position: relative; scroll-behavior: smooth; }
+        .page { display: none; max-width: 900px; margin: 0 auto; animation: fadeIn 0.4s ease-out; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Typography & Layout */
+        h1.page-title { font-size: 2.2rem; color: var(--primary-blue); border-bottom: 3px solid var(--accent-blue); padding-bottom: 0.5rem; margin-bottom: 2rem; }
+        h2 { font-size: 1.5rem; color: var(--primary-blue); margin: 2rem 0 1rem 0; padding-bottom: 0.3rem; border-bottom: 1px solid var(--border-color); }
+        h3 { font-size: 1.2rem; color: var(--text-main); margin: 1.5rem 0 0.8rem 0; }
+        p { margin-bottom: 1.2rem; }
+        ul, ol { margin-bottom: 1.2rem; padding-left: 1.5rem; }
+        li { margin-bottom: 0.4rem; }
+        strong { color: var(--primary-blue); }
+        .citation { font-size: 0.8em; color: var(--text-muted); vertical-align: super; text-decoration: none; }
+
+        /* Callouts / Encadrés pédagogiques */
+        .callout { padding: 1.2rem 1.5rem; border-radius: 8px; margin: 1.5rem 0; border-left: 5px solid; }
+        .callout-support { background: var(--light-blue); border-color: var(--accent-blue); }
+        .callout-support::before { content: "📋 CONTENU DU SUPPORT"; display: block; font-size: 0.75rem; font-weight: 700; color: var(--accent-blue); margin-bottom: 0.5rem; }
+        .callout-deepening { background: #f0fdf4; border-color: var(--success-green); }
+        .callout-deepening::before { content: "🔬 APPROFONDISSEMENT SCIENTIFIQUE"; display: block; font-size: 0.75rem; font-weight: 700; color: var(--success-green); margin-bottom: 0.5rem; }
+        .callout-alert { background: var(--light-red); border-color: var(--alert-red); }
+        .callout-alert::before { content: "⚠️ POINT CRITIQUE / À RETENIR"; display: block; font-size: 0.75rem; font-weight: 700; color: var(--alert-red); margin-bottom: 0.5rem; }
+        .highlight { background-color: var(--highlight-yellow); padding: 0.1rem 0.3rem; border-radius: 3px; }
+
+        /* Tables */
+        table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; background: var(--white); box-shadow: 0 1px 3px rgba(0,0,0,0.1); border-radius: 8px; overflow: hidden; }
+        th, td { padding: 1rem; text-align: left; border-bottom: 1px solid var(--border-color); }
+        th { background: var(--primary-blue); color: var(--white); font-weight: 600; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: var(--light-blue); }
+
+        /* Cards & Interactive Elements */
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 2rem 0; }
+        .card { background: var(--white); padding: 1.5rem; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid var(--border-color); cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; }
+        .card:hover { transform: translateY(-3px); box-shadow: 0 10px 15px rgba(0,0,0,0.1); border-color: var(--accent-blue); }
+        .card h3 { margin-top: 0; color: var(--accent-blue); }
+        
+        /* Flashcards */
+        .flashcard-container { perspective: 1000px; width: 100%; max-width: 500px; margin: 2rem auto; height: 300px; }
+        .flashcard { width: 100%; height: 100%; position: relative; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; }
+        .flashcard.is-flipped { transform: rotateY(180deg); }
+        .flashcard-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 2rem; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); text-align: center; }
+        .flashcard-front { background: var(--white); border: 2px solid var(--accent-blue); }
+        .flashcard-back { background: var(--primary-blue); color: var(--white); transform: rotateY(180deg); }
+        .flashcard-controls { display: flex; justify-content: center; gap: 1rem; margin-top: 1.5rem; }
+        .btn { padding: 0.6rem 1.2rem; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; transition: background 0.2s; }
+        .btn-primary { background: var(--accent-blue); color: var(--white); }
+        .btn-primary:hover { background: var(--primary-blue); }
+        .btn-outline { background: transparent; border: 1px solid var(--accent-blue); color: var(--accent-blue); }
+        .btn-outline:hover { background: var(--light-blue); }
+
+        /* QCM System */
+        .qcm-container { background: var(--white); border-radius: 8px; padding: 2rem; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 2rem; }
+        .qcm-question { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; color: var(--primary-blue); }
+        .qcm-options { display: flex; flex-direction: column; gap: 0.8rem; }
+        .qcm-option { padding: 1rem 1.5rem; border: 2px solid var(--border-color); border-radius: 6px; cursor: pointer; transition: all 0.2s; background: var(--bg-color); font-weight: 500; }
+        .qcm-option:hover { border-color: var(--accent-blue); background: var(--light-blue); }
+        .qcm-option.selected { border-color: var(--primary-blue); background: var(--light-blue); }
+        .qcm-option.correct { border-color: var(--success-green); background: #f0fdf4; color: #166534; }
+        .qcm-option.incorrect { border-color: var(--alert-red); background: var(--light-red); color: #991b1b; }
+        .qcm-feedback { margin-top: 1.5rem; padding: 1.5rem; border-radius: 6px; display: none; animation: fadeIn 0.3s; }
+        .qcm-feedback.show { display: block; }
+        
+        /* Mobile menu toggle */
+        .menu-toggle { display: none; position: fixed; top: 1rem; right: 1rem; z-index: 100; background: var(--primary-blue); color: white; border: none; padding: 0.5rem; border-radius: 4px; }
+
+        @media (max-width: 768px) {
+            nav { position: fixed; height: 100vh; z-index: 50; transform: translateX(-100%); }
+            nav.open { transform: translateX(0); }
+            main { padding: 1.5rem; }
+            .menu-toggle { display: block; }
+        }
+
+        /* Print Styles */
+        @media print {
+            nav, .menu-toggle, .btn, .flashcard-container, .qcm-container { display: none !important; }
+            main { padding: 0; display: block; }
+            .page { display: block !important; page-break-after: always; }
+            .callout { border: 1px solid #000; border-left: 5px solid #000; }
+        }
+    </style>
+</head>
+<body>
+
+    <button class="menu-toggle" onclick="toggleMenu()">☰ Menu</button>
+
+    <nav id="sidebar">
+        <div class="nav-header">
+            <h1>Bio-Chiffre Académie</h1>
+            <p>Sémiologie Chirurgicale</p>
+        </div>
+        <div class="nav-menu">
+            <div class="nav-section">Accueil</div>
+            <a class="nav-item active" onclick="navigateTo('accueil')">Introduction & Programme</a>
+            
+            <div class="nav-section">Espace de Cours</div>
+            <a class="nav-item" onclick="navigateTo('chap1')">Chapitre 1 : L'Interrogatoire</a>
+            <a class="nav-item" onclick="navigateTo('chap2')">Chapitre 2 : L'Abdomen Aigu</a>
+            <a class="nav-item" onclick="navigateTo('chap3')">Chapitre 3 : L'Appendicite Aiguë</a>
+            
+            <div class="nav-section">Espace d'Entraînement</div>
+            <a class="nav-item" onclick="navigateTo('flashcards')">Flashcards (Rappel actif)</a>
+            <a class="nav-item" onclick="navigateTo('qcm')">QCM & Cas Cliniques</a>
+            
+            <div class="nav-section">Annexes</div>
+            <a class="nav-item" onclick="navigateTo('sources')">Couverture Documentaire</a>
+        </div>
+        <div class="progress-container">
+            <span style="font-size: 0.8rem;">Progression d'étude</span>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-bar"></div>
+            </div>
+            <span style="font-size: 0.7rem; color: #93c5fd; display: block; margin-top: 0.3rem;" id="progress-text">0% complété</span>
+        </div>
+    </nav>
+
+    <main id="main-content">
+        <!-- ACCUEIL -->
+        <section id="accueil" class="page active">
+            <h1 class="page-title">Sémiologie Chirurgicale - Plateforme d'Étude</h1>
+            
+            <div class="callout callout-support">
+                <p>Bienvenue dans cet espace d'apprentissage conçu à partir des documents universitaires du <strong>Dr Lubin Evens</strong>. Cette plateforme a pour but de vous permettre de maîtriser le raisonnement sémiologique, du recueil du symptôme jusqu'à l'hypothèse diagnostique.</p>
+            </div>
+
+            <h2>Objectifs d'apprentissage</h2>
+            <ul>
+                <li>Distinguer précisément les concepts de signe, symptôme et syndrome <span class="citation">[span_0](start_span)[span_0](end_span)[span_1](start_span)[span_1](end_span)</span>.</li>
+                <li>Maîtriser la structure d'une anamnèse complète et pertinente <span class="citation">[span_2](start_span)[span_2](end_span)</span>.</li>
+                <li>Analyser de manière exhaustive les caractéristiques de la douleur abdominale <span class="citation">[span_3](start_span)[span_3](end_span)[span_4](start_span)[span_4](end_span)</span>.</li>
+                <li>Identifier les quatre grands syndromes de l'abdomen aigu chirurgical <span class="citation"></span>.</li>
+                <li>Mener un examen clinique rigoureux devant une suspicion d'appendicite aiguë <span class="citation"></span>.</li>
+            </ul>
+
+            <h2>Comment utiliser cette plateforme ?</h2>
+            <div class="grid-cards">
+                <div class="card" onclick="navigateTo('chap1')">
+                    <h3>📘 1. Étudier les fondements</h3>
+                    <p>Débutez par l'espace de cours. Les concepts originaux du support sont identifiés, et enrichis par des approfondissements scientifiques pour éclairer la physiopathologie.</p>
+                </div>
+                <div class="card" onclick="navigateTo('flashcards')">
+                    <h3>🔄 2. Mémoriser (Flashcards)</h3>
+                    <p>Utilisez le rappel actif via les cartes recto-verso pour graver les définitions et signes éponymiques dans votre mémoire à long terme.</p>
+                </div>
+                <div class="card" onclick="navigateTo('qcm')">
+                    <h3>🩺 3. Appliquer (QCM & Cas)</h3>
+                    <p>Testez votre raisonnement clinique à travers des exercices progressifs avec corrections détaillées et argumentées.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHAPITRE 1 -->
+        <section id="chap1" class="page">
+            <h1 class="page-title">Chapitre 1 : Introduction à la Sémiologie et Interrogatoire</h1>
+            
+            <div class="callout callout-support">
+                <strong>Définition fondamentale :</strong> La sémiologie est l'étude des signes et des symptômes permettant de poser un diagnostic médical <span class="citation">[span_5](start_span)[span_5](end_span)[span_6](start_span)[span_6](end_span)</span>.
+            </div>
+
+            <h2>1. Signes, Symptômes et Syndromes</h2>
+            <table>
+                <tr>
+                    <th>Concept</th>
+                    <th>Définition</th>
+                    <th>Exemple clinique</th>
+                </tr>
+                <tr>
+                    <td><strong>Symptôme</strong></td>
+                    <td>Manifestation <em>subjective</em>, perçue et décrite par le patient. Non directement mesurable par le médecin <span class="citation">[span_7](start_span)[span_7](end_span)[span_8](start_span)[span_8](end_span)</span>.</td>
+                    <td>Douleur, nausée, sensation de chaleur, asthénie <span class="citation">[span_9](start_span)[span_9](end_span)[span_10](start_span)[span_10](end_span)</span>.</td>
+                </tr>
+                <tr>
+                    <td><strong>Signe</strong></td>
+                    <td>Manifestation <em>objective</em>, découverte par le médecin lors de l'examen clinique (ou par des examens paracliniques) <span class="citation">[span_11](start_span)[span_11](end_span)[span_12](start_span)[span_12](end_span)[span_13](start_span)[span_13](end_span)</span>.</td>
+                    <td>Masse palpable, ictère (jaunisse), cyanose <span class="citation"></span>.</td>
+                </tr>
+                <tr>
+                    <td><strong>Syndrome</strong></td>
+                    <td>Ensemble de signes et de symptômes constituant une entité clinique reconnaissable <span class="citation">[span_14](start_span)[span_14](end_span)</span>.</td>
+                    <td>Syndrome péritonéal, syndrome occlusif <span class="citation">[span_15](start_span)[span_15](end_span)[span_16](start_span)[span_16](end_span)</span>.</td>
+                </tr>
+            </table>
+
+            <div class="callout callout-alert">
+                <p>Attention : Parfois, le patient peut découvrir et décrire un signe lui-même (ex: une masse herniaire qui apparaît à l'effort et se réduit au repos). C'est ce qui motive souvent sa consultation en chirurgie <span class="citation">[span_17](start_span)[span_17](end_span)[span_18](start_span)[span_18](end_span)</span>.</p>
+            </div>
+
+            <h2>2. La Fiche d'Identification du Patient</h2>
+            <p>Le recueil de l'identité du patient n'est pas qu'une formalité administrative ; il possède une véritable utilité sémiologique et stratégique <span class="citation">[span_19](start_span)[span_19](end_span)</span>.</p>
+            
+            <ul>
+                <li><strong>Le Nom :</strong> Permet d'établir une relation de confiance et de réduire la distance médecin-malade. Il peut aussi orienter vers une origine ethnique ou géographique, liée à des pathologies spécifiques <span class="citation">[span_20](start_span)[span_20](end_span)[span_21](start_span)[span_21](end_span)</span>.</li>
+                <li><strong>L'Âge :</strong> Constitue un facteur de risque majeur. Les pathologies varient considérablement entre la pédiatrie et la gériatrie, et le métabolisme des médicaments en dépend <span class="citation">[span_22](start_span)[span_22](end_span)[span_23](start_span)[span_23](end_span)</span>.</li>
+                <li><strong>Le Sexe :</strong> Définit des pathologies spécifiques (ex: cancer de la prostate, grossesse ectopique). Il est essentiel de distinguer le sexe biologique (qui détermine les organes présents) de l'identité de genre <span class="citation">[span_24](start_span)[span_24](end_span)[span_25](start_span)[span_25](end_span)</span>.</li>
+                <li><strong>La Religion :</strong> Peut influencer la prise en charge thérapeutique, par exemple le refus de transfusion sanguine (ex: Témoins de Jéhovah) <span class="citation">[span_26](start_span)[span_26](end_span)</span>.</li>
+                <li><strong>La Profession :</strong> Révèle des expositions toxiques ou environnementales (ex: inhalation de fumée) <span class="citation">[span_27](start_span)[span_27](end_span)</span>.</li>
+                <li><strong>Le Statut Social / Économique :</strong> Guide la prescription. Il est inutile de prescrire le médicament commercial le plus cher si le patient ne peut pas l'acheter ; l'observance thérapeutique en dépend <span class="citation">[span_28](start_span)[span_28](end_span)[span_29](start_span)[span_29](end_span)</span>.</li>
+                <li><strong>L'Adresse :</strong> Indique le lieu de vie (zone insalubre, zone endémique pour la malaria, etc.) <span class="citation">[span_30](start_span)[span_30](end_span)</span>.</li>
+                <li><strong>L'État Civil :</strong> Informe sur l'existence d'un conjoint (soutien moral) ou le risque lié aux maladies sexuellement transmissibles selon le nombre de partenaires <span class="citation">[span_31](start_span)[span_31](end_span)[span_32](start_span)[span_32](end_span)</span>.</li>
+            </ul>
+
+            <h2>3. L'Anamnèse (Histoire de la Maladie)</h2>
+            <p>Une fois le motif de consultation identifié (ce qui pousse le patient à venir) <span class="citation">[span_33](start_span)[span_33](end_span)</span>, le médecin interroge le patient sur :</p>
+            
+            <h3>A. Histoire de la maladie actuelle (HDMA)</h3>
+            <p>C'est l'évolution du problème depuis son début jusqu'à l'arrivée en consultation <span class="citation">[span_34](start_span)[span_34](end_span)</span>. Elle doit préciser de façon chronologique :</p>
+            <ul>
+                <li>L'heure et le mode de début <span class="citation">[span_35](start_span)[span_35](end_span)</span>.</li>
+                <li>L'évolution (ex: douleur d'abord modérée puis insupportable) <span class="citation">[span_36](start_span)[span_36](end_span)</span>.</li>
+                <li>La réponse aux antalgiques habituels <span class="citation">[span_37](start_span)[span_37](end_span)</span>.</li>
+                <li>Les symptômes d'accompagnement (ex: vomissements, fièvre). S'il n'y en a pas, il faut préciser "Pas de fièvre, etc." (signes négatifs pertinents) <span class="citation">[span_38](start_span)[span_38](end_span)[span_39](start_span)[span_39](end_span)</span>.</li>
+            </ul>
+
+            <h3>B. Antécédents (ATCD)</h3>
+            <ul>
+                <li><strong>Personnels pathologiques :</strong> Le patient a-t-il une "identité pathologique" (ex: diabétique chronique, hypertendu) ? Suit-il un traitement régulier (ex: Captopril, Aténolol) ? <span class="citation">[span_40](start_span)[span_40](end_span)[span_41](start_span)[span_41](end_span)[span_42](start_span)[span_42](end_span)</span>.</li>
+                <li><strong>Familiaux (Hérédo-familiale) :</strong> Diabète, hypertension, cancer, épilepsie, asthme <span class="citation">[span_43](start_span)[span_43](end_span)[span_44](start_span)[span_44](end_span)</span>.</li>
+                <li><strong>Chirurgicaux :</strong> Essentiel pour éviter les erreurs diagnostiques (ex: on ne cherche pas une appendicite chez un patient déjà appendicectomisé !) et pour repérer des complications post-opératoires comme les adhérences (brides) <span class="citation">[span_45](start_span)[span_45](end_span)[span_46](start_span)[span_46](end_span)</span>.</li>
+                <li><strong>Allergiques :</strong> Risque de choc anaphylactique mortel <span class="citation">[span_47](start_span)[span_47](end_span)</span>.</li>
+                <li><strong>Habitudes toxiques :</strong> Alcool (risque de cirrhose, douleur à l'hypochondre droit), Tabac (préciser la quantité), Drogues <span class="citation">[span_48](start_span)[span_48](end_span)[span_49](start_span)[span_49](end_span)</span>.</li>
+            </ul>
+        </section>
+
+        <!-- CHAPITRE 2 -->
+        <section id="chap2" class="page">
+            <h1 class="page-title">Chapitre 2 : L'Abdomen Aigu & Sémiologie de la Douleur</h1>
+
+            <h2>1. Analyse de la Douleur Abdominale</h2>
+            <p>La douleur est le motif de consultation chirurgical le plus fréquent <span class="citation">[span_50](start_span)[span_50](end_span)</span>. L'étudiant en médecine doit systématiquement analyser les 10 caractéristiques suivantes :</p>
+
+            <div class="grid-cards">
+                <div class="card">
+                    <h3>1. Siège / Localisation</h3>
+                    <p>Détermine l'organe potentiellement atteint <span class="citation">[span_51](start_span)[span_51](end_span)</span>.</p>
+                </div>
+                <div class="card">
+                    <h3>2. Durée / Mode d'apparition</h3>
+                    <p>Brutale, aiguë ou chronique <span class="citation">[span_52](start_span)[span_52](end_span)</span>.</p>
+                </div>
+                <div class="card">
+                    <h3>3. Intensité</h3>
+                    <p>Légère, modérée, sévère. Oriente le choix de l'antalgique <span class="citation">[span_53](start_span)[span_53](end_span)[span_54](start_span)[span_54](end_span)</span>.</p>
+                </div>
+                <div class="card">
+                    <h3>4. Type</h3>
+                    <p>Colique (crampe, intermittente), coup de poignard, brûlure <span class="citation">[span_55](start_span)[span_55](end_span)</span>.</p>
+                </div>
+            </div>
+
+            <ul>
+                <li><strong>5. Périodicité :</strong> Douleur liée aux repas, etc. <span class="citation">[span_56](start_span)[span_56](end_span)</span>.</li>
+                <li><strong>6. Irradiation :</strong> La douleur diffuse sans quitter son point d'origine <span class="citation">[span_57](start_span)[span_57](end_span)</span>.</li>
+                <li><strong>7. Migration :</strong> La douleur quitte le point initial pour s'installer ailleurs (ex: appendicite) <span class="citation">[span_58](start_span)[span_58](end_span)</span>.</li>
+                <li><strong>8. Facteurs déclenchants :</strong> Jeûne prolongé (ex: ulcère gastrique) <span class="citation">[span_59](start_span)[span_59](end_span)[span_60](start_span)[span_60](end_span)</span>.</li>
+                <li><strong>9. Facteurs calmants / aggravants :</strong> Lait calmant un ulcère, position antalgique <span class="citation">[span_61](start_span)[span_61](end_span)</span>.</li>
+                <li><strong>10. Signes d'accompagnement :</strong> Ictère (atteinte hépatique), fièvre, vomissements <span class="citation">[span_62](start_span)[span_62](end_span)</span>.</li>
+            </ul>
+
+            <div class="callout callout-deepening">
+                <p><strong>Rappels Anatomiques :</strong> L'abdomen est divisé en 9 régions (hypochondres, flancs, fosses iliaques, épigastre, région ombilicale, hypogastre) <span class="citation">[span_63](start_span)[span_63](end_span)[span_64](start_span)[span_64](end_span)</span>. Les repères clés incluent l'ombilic, la ligne blanche (linea alba), l'appendice xyphoïde et l'épine iliaque antéro-supérieure <span class="citation">[span_65](start_span)[span_65](end_span)[span_66](start_span)[span_66](end_span)</span>.</p>
+            </div>
+
+            <h2>2. L'Abdomen Aigu Chirurgical</h2>
+            <div class="callout callout-support">
+                <strong>Définition :</strong> C'est un ensemble de pathologies abdominales caractérisées par une douleur localisée à apparition brusque, nécessitant une évaluation ou une intervention chirurgicale urgente <span class="citation">[span_67](start_span)[span_67](end_span)[span_68](start_span)[span_68](end_span)[span_69](start_span)[span_69](end_span)</span>.
+            </div>
+
+            <p>Il se divise en quatre grands syndromes <span class="citation"></span> :</p>
+            
+            <h3>A. Syndrome Péritonéal (Abdomen aigu infecté) <span class="citation">[span_70](start_span)[span_70](end_span)</span></h3>
+            <ul>
+                <li><strong>Signes cliniques :</strong> Douleur, fièvre, tachycardie, vomissements, arrêt des gaz et des matières <span class="citation">[span_71](start_span)[span_71](end_span)[span_72](start_span)[span_72](end_span)[span_73](start_span)[span_73](end_span)</span>.</li>
+                <li><strong>Signes physiques cardinaux :</strong> 
+                    <ul>
+                        <li><span class="highlight">La contracture</span> abdominale <span class="citation">[span_74](start_span)[span_74](end_span)[span_75](start_span)[span_75](end_span)</span>.</li>
+                        <li><span class="highlight">La douleur à la décompression brusque</span> (Rebond / Signe de Blumberg) <span class="citation">[span_76](start_span)[span_76](end_span)[span_77](start_span)[span_77](end_span)</span>.</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="callout callout-deepening">
+                <p><strong>Physiopathologie de la contracture :</strong> En cas d'inflammation du péritoine (péritonite), la respiration diaphragmatique mobilise les organes et augmente la douleur. L'organisme déclenche alors une contraction musculaire abdominale involontaire (contracture) pour immobiliser la paroi et diminuer la douleur <span class="citation">[span_78](start_span)[span_78](end_span)[span_79](start_span)[span_79](end_span)</span>. C'est un pur mécanisme de défense.</p>
+                <p><strong>Mécanisme de déshydratation :</strong> L'inflammation péritonéale entraîne la création d'un "3ème secteur" (accumulation de liquide dans la cavité péritonéale et dans la lumière des anses intestinales dilatées). Cela cause une hypovolémie, une baisse de la perfusion rénale (oligurie), et une hémoconcentration <span class="citation">[span_80](start_span)[span_80](end_span)[span_81](start_span)[span_81](end_span)</span>.</p>
+            </div>
+
+            <h4>Classification des Péritonites <span class="citation"></span></h4>
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Mécanisme / Cause</th>
+                    <th>Terrain typique</th>
+                </tr>
+                <tr>
+                    <td><strong>Primaire</strong></td>
+                    <td>Infection sans cause intra-abdominale directe (voie hématogène). Évolution rapide, tableau toxique.</td>
+                    <td>Immunodéprimés, diabétiques, patients cirrhotiques, âges extrêmes <span class="citation"></span>.</td>
+                </tr>
+                <tr>
+                    <td><strong>Secondaire</strong></td>
+                    <td>La plus fréquente (90%). Conséquence d'une pathologie intra-abdominale (perforation, inflammation, diffusion).</td>
+                    <td>Appendicite, cholécystite, ulcère perforé, salpingite, pancréatite <span class="citation">[span_82](start_span)[span_82](end_span)[span_83](start_span)[span_83](end_span)</span>.</td>
+                </tr>
+                <tr>
+                    <td><strong>Tertiaire</strong></td>
+                    <td>Péritonite secondaire persistant malgré un traitement chirurgical adéquat. Flore altérée (champignons).</td>
+                    <td>Patients multi-opérés (relaparotomies), défaillance immunitaire <span class="citation">[span_84](start_span)[span_84](end_span)</span>.</td>
+                </tr>
+            </table>
+
+            <h3>B. Les autres syndromes <span class="citation">[span_85](start_span)[span_85](end_span)[span_86](start_span)[span_86](end_span)</span></h3>
+            <ul>
+                <li><strong>Syndrome Occlusif :</strong> Douleur de type colique (intermittente), distension abdominale, vomissements, arrêt total des gaz et matières <span class="citation">[span_87](start_span)[span_87](end_span)</span>.</li>
+                <li><strong>Syndrome Hémorragique :</strong> Douleur intense, contracture, tachycardie, sueurs froides, pâleur, signes de choc <span class="citation">[span_88](start_span)[span_88](end_span)[span_89](start_span)[span_89](end_span)</span>. Ex: Grossesse ectopique rompue, rupture de kyste <span class="citation">[span_90](start_span)[span_90](end_span)</span>.</li>
+                <li><strong>Syndrome Mixte (ou ischémique) :</strong> Combine les signes des syndromes précédents <span class="citation">[span_91](start_span)[span_91](end_span)</span>.</li>
+            </ul>
+        </section>
+
+        <!-- CHAPITRE 3 -->
+        <section id="chap3" class="page">
+            <h1 class="page-title">Chapitre 3 : L'Appendicite Aiguë</h1>
+
+            <div class="callout callout-support">
+                <strong>Introduction :</strong> L'appendicite est l'affection provoquant le plus fréquemment un syndrome péritonéal <span class="citation">[span_92](start_span)[span_92](end_span)[span_93](start_span)[span_93](end_span)</span>. Il s'agit d'une urgence chirurgicale causée par l'obstruction de la lumière appendiculaire <span class="citation">[span_94](start_span)[span_94](end_span)[span_95](start_span)[span_95](end_span)</span>.
+            </div>
+
+            <h2>1. Anatomie et Physiopathologie</h2>
+            <p>L'appendice est un organe lymphoïde (souvent appelé "l'amygdale de l'abdomen") en forme de petit ver (vermiforme), appendu au caecum <span class="citation">[span_96](start_span)[span_96](end_span)[span_97](start_span)[span_97](end_span)[span_98](start_span)[span_98](end_span)</span>. C'est un cul-de-sac avec une lumière étroite, ce qui le rend propice à l'obstruction <span class="citation">[span_99](start_span)[span_99](end_span)[span_100](start_span)[span_100](end_span)</span>.</p>
+
+            <h3>Mécanisme de la crise <span class="citation"></span></h3>
+            <ol>
+                <li><strong>Obstruction :</strong> Causée par un stercolithe/fécalithe (petite selle dure), un parasite, un corps étranger, ou une tumeur <span class="citation">[span_101](start_span)[span_101](end_span)[span_102](start_span)[span_102](end_span)[span_103](start_span)[span_103](end_span)</span>.</li>
+                <li><strong>Stase et infection :</strong> L'obstruction entraîne une stase, favorisant la multiplication bactérienne <span class="citation">[span_104](start_span)[span_104](end_span)[span_105](start_span)[span_105](end_span)</span>.</li>
+                <li><strong>Distension :</strong> La prolifération bactérienne produit des gaz, augmentant la pression interne et distendant la paroi <span class="citation">[span_106](start_span)[span_106](end_span)[span_107](start_span)[span_107](end_span)</span>.</li>
+                <li><strong>Ischémie et nécrose :</strong> La pression comprime les vaisseaux sanguins, entraînant une ischémie tissulaire puis une nécrose <span class="citation">[span_108](start_span)[span_108](end_span)</span>.</li>
+                <li><strong>Perforation :</strong> L'organe nécrosé se rompt, déversant son contenu infecté dans la cavité péritonéale, causant une péritonite <span class="citation">[span_109](start_span)[span_109](end_span)[span_110](start_span)[span_110](end_span)</span>.</li>
+            </ol>
+
+            <div class="callout callout-alert">
+                <strong>L'Accalmie traîtresse de Dieulafoy</strong> <span class="citation">[span_111](start_span)[span_111](end_span)[span_112](start_span)[span_112](end_span)</span>
+                <p>Au stade de nécrose, la destruction des fibres nerveuses de l'appendice et la baisse brusque de pression lors de la perforation entraînent une <strong>diminution temporaire et trompeuse de la douleur</strong>. Le patient se sent mieux, mais la maladie s'aggrave rapidement vers une péritonite généralisée. Le clinicien doit être extrêmement vigilant face à une douleur appendiculaire qui "disparaît" subitement.</p>
+            </div>
+
+            <h2>2. Raisonnement Sémiologique de la Douleur Appendiculaire</h2>
+            <ul>
+                <li><strong>Siège et Migration :</strong> La douleur débute typiquement au niveau épigastrique ou péri-ombilical. <em>Pourquoi ?</em> À cause de la distension pariétale initiale qui irrite le plexus solaire connecté à la région épigastrique <span class="citation">[span_113](start_span)[span_113](end_span)[span_114](start_span)[span_114](end_span)</span>. Après quelques heures, la douleur <strong>migre</strong> pour se localiser dans la fosse iliaque droite (FID) <span class="citation">[span_115](start_span)[span_115](end_span)[span_116](start_span)[span_116](end_span)</span>.</li>
+                <li><strong>Intensité :</strong> Débute de façon modérée, s'intensifie, peut devenir insomniante <span class="citation">[span_117](start_span)[span_117](end_span)</span>.</li>
+                <li><strong>Position antalgique :</strong> Le patient adopte souvent la position en "chien de fusil" <span class="citation">[span_118](start_span)[span_118](end_span)[span_119](start_span)[span_119](end_span)</span>.</li>
+                <li><strong>Signes d'accompagnement :</strong> Nausées, vomissements (1 à 2 fois max), anorexie (inappétence), et <strong>fébricule</strong> (fièvre légère ne dépassant pas 38.5°C au début) <span class="citation">[span_120](start_span)[span_120](end_span)[span_121](start_span)[span_121](end_span)[span_122](start_span)[span_122](end_span)</span>.</li>
+            </ul>
+
+            <h2>3. L'Examen Clinique de l'Abdomen <span class="citation">[span_123](start_span)[span_123](end_span)</span></h2>
+            <p>Séquence stricte : <strong>I</strong>nspection, <strong>P</strong>alpation, <strong>P</strong>ercussion, <strong>A</strong>uscultation (INPAPE AU) <span class="citation">[span_124](start_span)[span_124](end_span)</span>.</p>
+
+            <h3>A. Inspection <span class="citation"></span></h3>
+            <p>Le patient présente un "facies crispé" (facies péritonéal), marche difficilement. L'abdomen suit moins bien les mouvements respiratoires au niveau de la FID.</p>
+            <ul>
+                <li><strong>Signe de Scharpman :</strong> Douleur provoquée dans la FID lorsque le patient couché lève la tête (mise en tension musculaire) <span class="citation">[span_125](start_span)[span_125](end_span)</span>.</li>
+                <li><strong>Signe de Chutro :</strong> Déviation de la ligne blanche et de la cicatrice ombilicale vers la droite, causée par la contracture asymétrique des muscles obliques et transverses de la FID pour protéger la zone enflammée <span class="citation">[span_126](start_span)[span_126](end_span)</span>.</li>
+            </ul>
+
+            <h3>B. Palpation (Recherche des Signes Majeurs)</h3>
+            <div class="callout callout-deepening">
+                <p><strong>Le Point de McBurney :</strong> Attention, ce n'est PAS un signe ! C'est un repère anatomique. Il se situe à l'union du tiers externe et du tiers moyen (ou des deux tiers internes) de la ligne imaginaire reliant l'ombilic à l'épine iliaque antéro-supérieure droite <span class="citation">[span_127](start_span)[span_127](end_span)[span_128](start_span)[span_128](end_span)[span_129](start_span)[span_129](end_span)</span>. On note une <em>douleur accrue</em> à ce point.</p>
+            </div>
+            <ul>
+                <li><strong>Signe de Blumberg (Rebond) :</strong> Douleur provoquée par la <em>décompression brusque</em> de la FID, signant l'irritation du feuillet pariétal du péritoine <span class="citation">[span_130](start_span)[span_130](end_span)</span>.</li>
+                <li><strong>Signe de Rovsing :</strong> Douleur ressentie dans la FID lorsqu'on exerce une pression profonde dans la fosse iliaque gauche (FIG). <em>Mécanisme :</em> La pression repousse les gaz coliques à contre-courant vers le caecum à droite, distendant l'appendice enflammé <span class="citation">[span_131](start_span)[span_131](end_span)</span>.</li>
+            </ul>
+
+            <h3>C. Manœuvres Spécifiques <span class="citation">[span_132](start_span)[span_132](end_span)</span></h3>
+            <ul>
+                <li><strong>Signe du Psoas (Meltzer-Lapinsky) :</strong> Patient en décubitus dorsal. On soulève son membre inférieur droit étendu. Le muscle psoas se contracte, prenant l'appendice enflammé en "sandwich" entre la main de l'examinateur et le muscle en arrière, provoquant une douleur. (Utile pour l'appendicite rétro-caecale) <span class="citation">[span_133](start_span)[span_133](end_span)</span>.</li>
+                <li><strong>Signe de l'Obturateur :</strong> Patient en décubitus dorsal, on fléchit la cuisse sur le bassin et on imprime une rotation externe, provoquant une douleur <span class="citation">[span_134](start_span)[span_134](end_span)</span>.</li>
+                <li><strong>Toucher Rectal (TR) :</strong> Recherche le <strong>cri de Douglas</strong>. Le doigt perçoit un cul-de-sac de Douglas comblé et très douloureux, signant une irritation péritonéale pelvienne <span class="citation">[span_135](start_span)[span_135](end_span)</span>.</li>
+            </ul>
+        </section>
+
+        <!-- QCM ET CAS CLINIQUES -->
+        <section id="qcm" class="page">
+            <h1 class="page-title">QCM & Cas Cliniques</h1>
+            <p>Testez vos connaissances acquises dans les chapitres. Sélectionnez une seule réponse par question.</p>
+
+            <div id="quiz-container">
+                <!-- Quiz dynamically injected by JS -->
+            </div>
+        </section>
+
+        <!-- FLASHCARDS -->
+        <section id="flashcards" class="page">
+            <h1 class="page-title">Rappel Actif : Flashcards</h1>
+            <p>Cliquez sur la carte pour révéler la réponse. Utilisez ce module pour mémoriser les notions clés.</p>
+
+            <div class="flashcard-container">
+                <div class="flashcard" id="flashcard" onclick="flipCard()">
+                    <div class="flashcard-face flashcard-front">
+                        <h2 style="border: none; text-align:center;">Question</h2>
+                        <p id="fc-question" style="font-size: 1.3rem; font-weight: 500;"></p>
+                        <span style="font-size: 0.8rem; color: var(--text-muted); position: absolute; bottom: 15px;">Cliquez pour retourner</span>
+                    </div>
+                    <div class="flashcard-face flashcard-back">
+                        <h2 style="border: none; color:white;">Réponse</h2>
+                        <p id="fc-answer" style="font-size: 1.1rem;"></p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="flashcard-controls">
+                <button class="btn btn-outline" onclick="prevCard()">Précedente</button>
+                <span id="fc-counter" style="display:flex; align-items:center; font-weight:bold;">1 / X</span>
+                <button class="btn btn-primary" onclick="nextCard()">Suivante</button>
+            </div>
+        </section>
+
+        <!-- SOURCES -->
+        <section id="sources" class="page">
+            <h1 class="page-title">Couverture Documentaire</h1>
+            
+            <div class="callout callout-support">
+                <h3>Documents analysés :</h3>
+                <ul>
+                    <li><code>#1Semio Dr.Lubin part 1.pdf</code></li>
+                    <li><code>#2Semio Dr.Lubin part 2.pdf</code></li>
+                </ul>
+            </div>
+
+            <h2>Cartographie de l'intégration :</h2>
+            <table>
+                <tr>
+                    <th>Notions des PDF (Sources extraites)</th>
+                    <th>Intégration dans le cours</th>
+                    <th>Statut</th>
+                </tr>
+                <tr>
+                    <td>Définitions Signe/Symptôme, Anamnèse (Identité, HDMA, ATCD)</td>
+                    <td>Chapitre 1</td>
+                    <td><span style="color: green; font-weight:bold;">✔ Intégralement couvert</span></td>
+                </tr>
+                <tr>
+                    <td>Sémiologie de la douleur (10 caractéristiques)</td>
+                    <td>Chapitre 2</td>
+                    <td><span style="color: green; font-weight:bold;">✔ Intégralement couvert</span></td>
+                </tr>
+                <tr>
+                    <td>Abdomen aigu (Syndromes : péritonéal, occlusif, hémorragique, ischémique)</td>
+                    <td>Chapitre 2</td>
+                    <td><span style="color: green; font-weight:bold;">✔ Intégralement couvert</span></td>
+                </tr>
+                <tr>
+                    <td>Appendicite (Migration, Physiopathologie, Accalmie de Dieulafoy)</td>
+                    <td>Chapitre 3</td>
+                    <td><span style="color: green; font-weight:bold;">✔ Intégralement couvert</span></td>
+                </tr>
+                <tr>
+                    <td>Signes de l'examen clinique (Rovsing, Blumberg, Chutro, Psoas, etc.)</td>
+                    <td>Chapitre 3</td>
+                    <td><span style="color: green; font-weight:bold;">✔ Intégralement couvert</span></td>
+                </tr>
+            </table>
+
+            <h3>Limites et incertitudes signalées :</h3>
+            <p>
+                - Certaines définitions de l'anatomie de surface des PDF sont abrégées. L'approfondissement scientifique a permis de préciser que le point de McBurney se prend généralement par rapport à l'Epine Iliaque Antéro-Supérieure (EIAS) selon les conventions anatomiques classiques, tout en conservant la formulation du Dr Lubin sur le tiers externe / moyens.<br>
+                - Le mécanisme précis de la fièvre (limite à 38,5°C) dans l'appendicite a été maintenu fidèlement au texte pour refléter l'évolution avant le stade de péritonite généralisée.
+            </p>
+        </section>
+
+    </main>
+
+    <script>
+        // Navigation system
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page').forEach(page => page.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            
+            document.getElementById(pageId).classList.add('active');
+            event.currentTarget.classList.add('active');
+            
+            updateProgress();
+            
+            // Close mobile menu
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+            
+            // Scroll to top
+            document.getElementById('main-content').scrollTop = 0;
+        }
+
+        function toggleMenu() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Progress Tracking using LocalStorage
+        function updateProgress() {
+            let visited = JSON.parse(localStorage.getItem('medSemioProgress')) || [];
+            const activePage = document.querySelector('.page.active').id;
+            
+            if (!visited.includes(activePage)) {
+                visited.push(activePage);
+                localStorage.setItem('medSemioProgress', JSON.stringify(visited));
+            }
+            
+            const totalPages = document.querySelectorAll('.page').length;
+            const percentage = Math.round((visited.length / totalPages) * 100);
+            
+            document.getElementById('progress-bar').style.width = percentage + '%';
+            document.getElementById('progress-text').innerText = percentage + '% complété (sauvegardé localement)';
+        }
+
+        // Initialize progress on load
+        window.onload = updateProgress;
+
+        // Flashcards Data & Logic
+        const flashcards = [
+            { q: "Quelle est la différence fondamentale entre un signe et un symptôme ?", a: "Un signe est une manifestation objective découverte par le médecin (ex: ictère). Un symptôme est une manifestation subjective ressentie par le patient (ex: douleur)." },
+            { q: "Pourquoi l'appendicite débute-t-elle souvent par une douleur épigastrique avant de migrer vers la FID ?", a: "C'est une douleur projetée liée à l'irritation initiale des plexus nerveux (solaire) par la distension de l'organe, avant que l'inflammation ne touche le péritoine pariétal de la FID." },
+            { q: "Qu'est-ce que l'accalmie traîtresse de Dieulafoy ?", a: "Une diminution trompeuse et temporaire de la douleur dans l'appendicite due à la nécrose des fibres nerveuses et la baisse de pression suite à la perforation. Annonce une péritonite imminente." },
+            { q: "Quel mécanisme physiologique explique la contracture abdominale ?", a: "C'est un réflexe de défense involontaire de l'organisme. La paroi se fige pour empêcher les mouvements diaphragmatiques qui mobiliseraient les organes et augmenteraient la douleur péritonéale." },
+            { q: "Comment recherche-t-on le signe de Rovsing et que signifie-t-il ?", a: "On comprime la Fosse Iliaque Gauche (FIG). Cela refoule les gaz vers le caecum et distend l'appendice, provoquant une douleur dans la FID. Signe en faveur d'une appendicite." },
+            { q: "Qu'est-ce que le signe de Chutro ?", a: "Une déviation de la cicatrice ombilicale vers la droite, secondaire à la contracture asymétrique des muscles de la paroi abdominale du côté de l'inflammation." },
+            { q: "Quels sont les signes d'un syndrome péritonéal ?", a: "Douleur abdominale sévère, fièvre, tachycardie, vomissements, contracture pariétale (ventre de bois) et douleur à la décompression brusque (Blumberg)." }
+        ];
+
+        let currentCard = 0;
+
+        function renderFlashcard() {
+            document.getElementById('flashcard').classList.remove('is-flipped');
+            setTimeout(() => {
+                document.getElementById('fc-question').innerText = flashcards[currentCard].q;
+                document.getElementById('fc-answer').innerText = flashcards[currentCard].a;
+                document.getElementById('fc-counter').innerText = `${currentCard + 1} / ${flashcards.length}`;
+            }, 150); // wait for flip animation to hide text
+        }
+
+        function flipCard() {
+            document.getElementById('flashcard').classList.toggle('is-flipped');
+        }
+
+        function nextCard() {
+            currentCard = (currentCard + 1) % flashcards.length;
+            renderFlashcard();
+        }
+
+        function prevCard() {
+            currentCard = (currentCard - 1 + flashcards.length) % flashcards.length;
+            renderFlashcard();
+        }
+
+        // QCM Data & Logic
+        const quizData = [
+            {
+                q: "Cas Clinique : Un patient de 24 ans se présente aux urgences pour une douleur abdominale intense. À l'interrogatoire, la douleur a débuté il y a 12h autour de l'ombilic et se situe maintenant en Fosse Iliaque Droite. Le patient marche plié en avant. Sa température est à 38,2°C. Quel signe physique devez-vous rechercher pour confirmer votre principale hypothèse ?",
+                options: [
+                    "Une voussure pulsatile de l'abdomen",
+                    "Le signe de Blumberg et le signe de Rovsing",
+                    "Un ictère conjonctival",
+                    "Une douleur irradiant vers l'épaule gauche"
+                ],
+                correct: 1,
+                explanation: "La clinique est typique d'une appendicite aiguë (migration de la douleur, fébricule, position antalgique). Les signes cliniques à rechercher sont ceux de l'irritation péritonéale en FID : Blumberg (douleur à la décompression brusque) et Rovsing (douleur FID à la compression FIG)."
+            },
+            {
+                q: "Concernant la classification des péritonites enseignée, quelle affirmation est exacte ?",
+                options: [
+                    "Une péritonite primaire est toujours causée par la perforation d'un ulcère.",
+                    "La péritonite secondaire est la forme la plus rare.",
+                    "Une péritonite primaire survient généralement sans cause intra-abdominale directe (ex: chez le cirrhotique).",
+                    "La péritonite tertiaire est une inflammation bénigne réversible spontanément."
+                ],
+                correct: 2,
+                explanation: "Selon le cours du Dr Lubin, la péritonite primaire n'a pas de cause intra-abdominale chirurgicale initiale (infection spontanée hématogène, liée à une immunodéficience). La péritonite secondaire (liée à la pathologie d'un organe) représente 90% des cas."
+            },
+            {
+                q: "Lors d'une crise d'appendicite, le patient ressent un soulagement soudain et inattendu de la douleur, alors qu'il ne reçoit pas de traitement antalgique fort. Comment interprétez-vous ce signe ?",
+                options: [
+                    "C'est un signe de guérison spontanée de l'inflammation.",
+                    "L'appendice a expulsé le fécalithe dans le caecum.",
+                    "C'est l'accalmie traîtresse de Dieulafoy, signant la nécrose et la perforation de l'appendice.",
+                    "C'est une réaction allergique."
+                ],
+                correct: 2,
+                explanation: "C'est l'accalmie traîtresse de Dieulafoy. La nécrose détruit les fibres nerveuses et la perforation libère brusquement la pression intra-appendiculaire, donnant une fausse impression d'amélioration clinique avant la péritonite."
+            }
+        ];
+
+        function renderQuiz() {
+            const container = document.getElementById('quiz-container');
+            container.innerHTML = '';
+
+            quizData.forEach((item, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'qcm-container';
+                
+                let html = `<div class="qcm-question">Question ${index + 1} : ${item.q}</div>`;
+                html += `<div class="qcm-options">`;
+                
+                item.options.forEach((opt, optIndex) => {
+                    html += `<div class="qcm-option" onclick="checkAnswer(${index}, ${optIndex}, this)">${opt}</div>`;
+                });
+                
+                html += `</div>`;
+                html += `<div class="qcm-feedback" id="feedback-${index}">
+                            <strong>Explication :</strong> ${item.explanation}
+                         </div>`;
+                
+                questionDiv.innerHTML = html;
+                container.appendChild(questionDiv);
+            });
+        }
+
+        function checkAnswer(questionIndex, selectedOptionIndex, element) {
+            // Prevent multiple selections
+            const parent = element.parentElement;
+            if (parent.querySelector('.correct') || parent.querySelector('.incorrect')) return;
+
+            const correctOptionIndex = quizData[questionIndex].correct;
+            const options = parent.children;
+
+            if (selectedOptionIndex === correctOptionIndex) {
+                element.classList.add('correct');
+            } else {
+                element.classList.add('incorrect');
+                options[correctOptionIndex].classList.add('correct');
+            }
+
+            // Show feedback
+            document.getElementById(`feedback-${questionIndex}`).classList.add('show');
+            
+            if (selectedOptionIndex === correctOptionIndex) {
+                document.getElementById(`feedback-${questionIndex}`).style.backgroundColor = '#f0fdf4';
+                document.getElementById(`feedback-${questionIndex}`).style.border = '1px solid var(--success-green)';
+            } else {
+                document.getElementById(`feedback-${questionIndex}`).style.backgroundColor = 'var(--light-red)';
+                document.getElementById(`feedback-${questionIndex}`).style.border = '1px solid var(--alert-red)';
+            }
+        }
+
+        // Init apps
+        renderFlashcard();
+        renderQuiz();
+
+    </script>
+</body>
+</html>
